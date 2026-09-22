@@ -908,6 +908,77 @@ section{ position:relative; }
   .feature-row .media, .feature-row.reverse .media{ grid-column:1; grid-row:1; }
   .feature-row .content, .feature-row.reverse .content{ grid-column:1; grid-row:2; }
 }
+
+/* ---------- Mosaic (portfolio-style bento blocks) ---------- */
+.mosaic-section{ padding: clamp(70px,9vw,120px) var(--pad) 0; background:var(--wine); }
+.mosaic-section:last-of-type{ padding-bottom: clamp(70px,9vw,120px); }
+.mosaic-block{
+  max-width:var(--max); margin:0 auto clamp(60px,7vw,90px);
+  display:grid; grid-template-columns: repeat(4, 1fr); grid-auto-rows:140px; gap:14px;
+  grid-template-areas:
+    "text text s1   hero"
+    "text text s2   hero"
+    "s3   s3   s3   hero";
+}
+.mosaic-block:last-child{ margin-bottom:0; }
+.mosaic-block.simple{
+  grid-template-columns: 1.15fr 1fr; grid-auto-rows:auto; gap:14px;
+  grid-template-areas: "text hero";
+}
+.mosaic-tile{ position:relative; border-radius:20px; overflow:hidden; }
+.mosaic-tile.t-text{ grid-area:text; }
+.mosaic-tile.t-hero{ grid-area:hero; }
+.mosaic-tile.t-s1{ grid-area:s1; }
+.mosaic-tile.t-s2{ grid-area:s2; }
+.mosaic-tile.t-s3{ grid-area:s3; }
+.mosaic-tile.photo{ cursor:zoom-in; }
+.mosaic-tile.photo img{
+  width:100%; height:100%; object-fit:cover;
+  filter:brightness(.9) contrast(1.03) saturate(1.03); transition:transform .6s var(--ease);
+}
+.mosaic-tile.photo:hover img{ transform:scale(1.06); }
+.mosaic-tile.photo::after{
+  content:''; position:absolute; inset:0; pointer-events:none;
+  background:linear-gradient(180deg, transparent 60%, rgba(11,6,7,.6) 100%);
+}
+.mosaic-tile.photo .tag{
+  position:absolute; left:14px; bottom:12px; z-index:2;
+  font-size:0.66rem; letter-spacing:.07em; text-transform:uppercase; color:var(--mist);
+  background:rgba(11,6,7,.55); backdrop-filter:blur(4px);
+  padding:5px 11px; border-radius:999px; border:1px solid rgba(243,237,226,.18);
+}
+.mosaic-tile.text{
+  background:var(--panel); border:1px solid rgba(232,168,76,0.16);
+  padding:clamp(22px,3vw,32px); display:flex; flex-direction:column; justify-content:center;
+}
+.mosaic-tile.text .eyebrow{ margin-bottom:8px; }
+.mosaic-tile.text h3{ font-family:var(--display); font-size:clamp(1.3rem,2.2vw,1.6rem); font-weight:500; color:var(--mist); margin:0 0 12px; line-height:1.25; }
+.mosaic-tile.text p{ color:var(--smoke); font-size:0.9rem; line-height:1.65; margin:0 0 16px; }
+.mosaic-tile.text .cta-glow{ align-self:flex-start; }
+.mosaic-tile.placeholder{
+  border:1px dashed rgba(232,168,76,.3); background:rgba(232,168,76,.04);
+  display:flex; align-items:center; justify-content:center; min-height:260px;
+}
+.mosaic-tile.placeholder span{ font-size:.72rem; text-transform:uppercase; letter-spacing:.06em; color:var(--smoke); opacity:.7; text-align:center; padding:0 14px; }
+
+@media (max-width:900px){
+  .mosaic-block{
+    grid-template-columns: 1fr 1fr; grid-auto-rows:130px;
+    grid-template-areas:
+      "text text"
+      "hero hero"
+      "s1   s2"
+      "s3   s3";
+  }
+  .mosaic-block .t-hero{ height:260px; }
+  .mosaic-block.simple{ grid-template-columns:1fr; grid-template-areas: "text" "hero"; }
+  .mosaic-block.simple .t-hero{ min-height:220px; }
+}
+@media (max-width:600px){
+  .mosaic-block{ grid-template-columns:1fr; grid-template-areas: "text" "hero" "s1" "s2" "s3"; }
+  .mosaic-block .t-hero{ height:240px; }
+  .mosaic-block .t-s1, .mosaic-block .t-s2, .mosaic-block .t-s3{ height:180px; }
+}
 </style>
 </head>
 <body>
@@ -954,86 +1025,71 @@ section{ position:relative; }
   </div>
 </section>
 
-<section class="feature-section" style="background:var(--wine);">
-  <div class="feature-row reveal">
-    <div class="media">
-      <div class="hero-shot"><img src="fotos-experiencia/piscina-jardim/foto-01.jpg" alt="Piscina com sauna de vidro na Pousada das Nascentes"></div>
-    <div class="thumb-strip">
-      <a href="fotos-experiencia/piscina-jardim/foto-02.jpg" target="_blank" rel="noopener"><img src="fotos-experiencia/piscina-jardim/foto-02.jpg" alt="Cantinho de estar no jardim"></a>
-      <a href="fotos-experiencia/piscina-jardim/foto-04.jpg" target="_blank" rel="noopener"><img src="fotos-experiencia/piscina-jardim/foto-04.jpg" alt="Piscina iluminada ao entardecer"></a>
-      <a href="fotos-experiencia/piscina-jardim/foto-05.jpg" target="_blank" rel="noopener"><img src="fotos-experiencia/piscina-jardim/foto-05.jpg" alt="Piscina com espreguiçadeiras"></a>
-      <a href="fotos-experiencia/piscina-jardim/foto-03.jpg" target="_blank" rel="noopener"><img src="fotos-experiencia/piscina-jardim/foto-03.jpg" alt="Jardim tropical em volta da piscina"></a>
-      <a href="fotos-experiencia/piscina-jardim/foto-06.jpg" target="_blank" rel="noopener"><img src="fotos-experiencia/piscina-jardim/foto-06.jpg" alt="Corredor coberto com bancos no jardim"></a>
-      <a href="fotos-experiencia/piscina-jardim/foto-07.jpg" target="_blank" rel="noopener"><img src="fotos-experiencia/piscina-jardim/foto-07.jpg" alt="Banco no jardim entre as plantas"></a>
+<section class="mosaic-section">
+  <div class="mosaic-block">
+    <div class="mosaic-tile text t-text">
+      <div>
+        <p class="eyebrow">Ao ar livre</p>
+        <h3>Piscina e jardim</h3>
+        <p>Para os dias de sol e calor em Brotas, quem se hospeda na Nascentes aproveita uma bela piscina com música ambiente, cercada por plantas e flores — o ponto de encontro depois das atividades do dia.</p>
+      </div>
     </div>
-    </div>
-    <div class="content">
-      <p class="eyebrow">Ao ar livre</p>
-      <h2>Piscina e jardim</h2>
-      <p>Para os dias de sol e calor em Brotas, quem se hospeda na Nascentes aproveita uma bela piscina com música ambiente, cercada por plantas e flores. É na área de convivência que os hóspedes se reúnem depois das atividades do dia — fazendo novas amizades e compartilhando as alegrias da viagem.</p>
-    </div>
+    <div class="mosaic-tile photo t-hero"><img src="fotos-experiencia/piscina-jardim/foto-01.jpg" alt="Piscina com sauna de vidro na Pousada das Nascentes"><span class="tag">Piscina e jardim</span></div>
+    <div class="mosaic-tile photo t-s1"><img src="fotos-experiencia/piscina-jardim/foto-02.jpg" alt="Cantinho de estar no jardim"></div>
+    <div class="mosaic-tile photo t-s2"><img src="fotos-experiencia/piscina-jardim/foto-04.jpg" alt="Piscina iluminada ao entardecer"></div>
+    <div class="mosaic-tile photo t-s3"><img src="fotos-experiencia/piscina-jardim/foto-05.jpg" alt="Piscina com espreguiçadeiras"></div>
   </div>
-</section>
 
-<section class="feature-section" style="background:var(--wine-deep);">
-  <div class="feature-row reverse reveal">
-    <div class="media">
-      <div class="hero-shot"><img src="fotos-experiencia/sauna/foto-01.jpg" alt="Sauna de vidro integrada com a piscina, iluminada à noite"></div>
-    <div class="thumb-strip">
-      <a href="fotos-experiencia/sauna/foto-02.jpg" target="_blank" rel="noopener"><img src="fotos-experiencia/sauna/foto-02.jpg" alt="Piscina e sauna de vidro iluminadas à noite"></a>
-      <a href="fotos-experiencia/sauna/foto-03.jpg" target="_blank" rel="noopener"><img src="fotos-experiencia/sauna/foto-03.jpg" alt="Sauna de vidro junto à piscina com área de estar"></a>
-      <a href="fotos-experiencia/sauna/foto-04.jpg" target="_blank" rel="noopener"><img src="fotos-experiencia/sauna/foto-04.jpg" alt="Entardecer na piscina com a sauna de vidro"></a>
-      <a href="fotos-experiencia/sauna/foto-05.jpg" target="_blank" rel="noopener"><img src="fotos-experiencia/sauna/foto-05.jpg" alt="Vista noturna da piscina com sauna de vidro e palmeiras"></a>
-      <a href="fotos-experiencia/sauna/foto-06.jpg" target="_blank" rel="noopener"><img src="fotos-experiencia/sauna/foto-06.jpg" alt="Sauna de vidro com iluminação e varal de luzes"></a>
-      <a href="fotos-experiencia/sauna/foto-07.jpg" target="_blank" rel="noopener"><img src="fotos-experiencia/sauna/foto-07.jpg" alt="Fachada da pousada à noite com piscina em primeiro plano"></a>
+  <div class="mosaic-block">
+    <div class="mosaic-tile text t-text">
+      <div>
+        <p class="eyebrow">Novidade</p>
+        <h3>Sauna de vidro integrada com a piscina</h3>
+        <p>Para quem busca relaxar depois de um dia de ecoturismo em Brotas: uma sauna de vidro integrada à piscina, que pode atingir até 50°C. Um diferencial que só a Nascentes oferece na região.</p>
+      </div>
     </div>
-    </div>
-    <div class="content">
-      <p class="eyebrow">Novidade</p>
-      <h2>Sauna de vidro integrada com a piscina</h2>
-      <p>Para quem busca relaxar depois de um dia repleto de ecoturismo e aventuras em Brotas: uma sauna de vidro integrada à piscina, que pode atingir até 50°C. Repor as energias e terminar o dia revigorado — um diferencial que só a Nascentes oferece na região.</p>
-    </div>
+    <div class="mosaic-tile photo t-hero"><img src="fotos-experiencia/sauna/foto-01.jpg" alt="Sauna de vidro integrada com a piscina, iluminada à noite"><span class="tag">Sauna de vidro</span></div>
+    <div class="mosaic-tile photo t-s1"><img src="fotos-experiencia/sauna/foto-02.jpg" alt="Piscina e sauna de vidro iluminadas à noite"></div>
+    <div class="mosaic-tile photo t-s2"><img src="fotos-experiencia/sauna/foto-04.jpg" alt="Entardecer na piscina com a sauna de vidro"></div>
+    <div class="mosaic-tile photo t-s3"><img src="fotos-experiencia/sauna/foto-06.jpg" alt="Sauna de vidro com iluminação e varal de luzes"></div>
   </div>
-</section>
 
-<section class="feature-section" style="background:var(--wine);">
-  <div class="feature-row reveal">
-    <div class="media">
-      <div class="hero-shot photo-placeholder"><span>Fotos de a sala de massagem — em breve</span></div>
+  <div class="mosaic-block">
+    <div class="mosaic-tile text t-text">
+      <div>
+        <p class="eyebrow">Bem-estar</p>
+        <h3>Sala de massagem</h3>
+        <p>Revitalize o corpo e a alma na nossa sala de massagem — uma verdadeira corrente de energia vital, nas mãos dos nossos massoterapeutas.</p>
+        <a class="cta-glow cta-glow--small" href="https://api.whatsapp.com/send?phone=14991797722&text=Ol%C3%A1%21%20Gostaria%20de%20saber%20mais%20sobre%20a%20sala%20de%20massagem." target="_blank" rel="noopener">Consultar disponibilidade</a>
+      </div>
     </div>
-    <div class="content">
-      <p class="eyebrow">Bem-estar</p>
-      <h2>Sala de massagem</h2>
-      <p>Revitalize o corpo e a alma na nossa sala de massagem — uma verdadeira corrente de energia vital, nas mãos dos nossos massoterapeutas.</p>
-      <a class="cta-glow cta-glow--small" href="https://api.whatsapp.com/send?phone=14991797722&text=Ol%C3%A1%21%20Gostaria%20de%20saber%20mais%20sobre%20a%20sala%20de%20massagem." target="_blank" rel="noopener">Consultar disponibilidade</a>
-    </div>
+    <div class="mosaic-tile photo t-hero"><img src="fotos-experiencia/massagem/foto-01.jpg" alt="Maca de massagem preparada com biombo entalhado"><span class="tag">Sala de massagem</span></div>
+    <div class="mosaic-tile photo t-s1"><img src="fotos-experiencia/massagem/foto-02.jpg" alt="Sala de massagem com área de descanso"></div>
+    <div class="mosaic-tile photo t-s2"><img src="fotos-experiencia/massagem/foto-04.jpg" alt="Sala de massagem com sofás e decoração lilás"></div>
+    <div class="mosaic-tile photo t-s3"><img src="fotos-experiencia/massagem/foto-06.jpg" alt="Almofadas decorativas na sala de massagem"></div>
   </div>
-</section>
 
-<section class="feature-section" style="background:var(--wine-deep);">
-  <div class="feature-row reverse reveal">
-    <div class="media">
-      <div class="hero-shot photo-placeholder"><span>Fotos de a recepção — em breve</span></div>
+  <div class="mosaic-block simple">
+    <div class="mosaic-tile text t-text">
+      <div>
+        <p class="eyebrow">Primeira impressão</p>
+        <h3>Recepção</h3>
+        <p>Um dos grandes diferenciais da Nascentes é a nossa recepção. Decoração contemporânea, sofisticada e exclusiva, com objetos de todas as partes do mundo — um conjunto exótico dentro de uma decoração indiana, asiática e indígena.</p>
+      </div>
     </div>
-    <div class="content">
-      <p class="eyebrow">Primeira impressão</p>
-      <h2>Recepção</h2>
-      <p>Um dos grandes diferenciais da Nascentes é a nossa recepção. Com decoração contemporânea, sofisticada e exclusiva, reunimos objetos de todas as partes do mundo, formando um conjunto exótico dentro de uma decoração indiana, asiática e indígena.</p>
-    </div>
+    <div class="mosaic-tile placeholder t-hero"><span>Fotos de a recepção — em breve</span></div>
   </div>
-</section>
 
-<section class="feature-section" style="background:var(--wine);">
-  <div class="feature-row reveal">
-    <div class="media">
-      <div class="hero-shot photo-placeholder"><span>Fotos de o quiosque — em breve</span></div>
+  <div class="mosaic-block simple">
+    <div class="mosaic-tile text t-text">
+      <div>
+        <p class="eyebrow">Opcional</p>
+        <h3>Quiosque para churrasco</h3>
+        <p>Contamos com uma área de quiosque, mediante consulta de disponibilidade. Não dispomos dos serviços de churrasqueiro ou cozinha — para mais informações, fale com a nossa recepção.</p>
+        <a class="cta-glow cta-glow--small" href="https://api.whatsapp.com/send?phone=14991797722&text=Ol%C3%A1%21%20Gostaria%20de%20consultar%20valores%20do%20quiosque%20para%20churrasco." target="_blank" rel="noopener">Consultar valores</a>
+      </div>
     </div>
-    <div class="content">
-      <p class="eyebrow">Opcional</p>
-      <h2>Quiosque para churrasco</h2>
-      <p>Contamos com uma área de quiosque, mediante consulta de disponibilidade. Não dispomos dos serviços de churrasqueiro ou cozinha — para mais informações, fale com a nossa recepção.</p>
-      <a class="cta-glow cta-glow--small" href="https://api.whatsapp.com/send?phone=14991797722&text=Ol%C3%A1%21%20Gostaria%20de%20consultar%20valores%20do%20quiosque%20para%20churrasco." target="_blank" rel="noopener">Consultar valores</a>
-    </div>
+    <div class="mosaic-tile placeholder t-hero"><span>Fotos de o quiosque — em breve</span></div>
   </div>
 </section>
 
