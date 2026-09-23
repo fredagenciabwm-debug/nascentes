@@ -897,20 +897,39 @@ section{ position:relative; }
 .suite-gallery-grid a:hover img{ transform:scale(1.07); filter:brightness(1) contrast(1.02) saturate(1.05); }
 @media (max-width:780px){ .suite-gallery-grid{ grid-template-columns:repeat(2,1fr); } }
 
-.gallery-lightbox{
+.gallery-carousel{
   position:fixed; inset:0; z-index:400; padding:24px;
-  background: rgba(11,6,7,0.92); backdrop-filter: blur(6px);
+  background: rgba(11,6,7,0.94); backdrop-filter: blur(6px);
   display:flex; align-items:center; justify-content:center;
   opacity:0; pointer-events:none; transition: opacity .3s var(--ease);
 }
-.gallery-lightbox.open{ opacity:1; pointer-events:auto; }
-.gallery-lightbox img{ max-width:92vw; max-height:88vh; border-radius:10px; box-shadow:0 20px 60px rgba(0,0,0,.5); }
-.gallery-lightbox-close{
-  position:absolute; top:20px; right:24px; z-index:5; width:40px; height:40px; border-radius:50%;
+.gallery-carousel.open{ opacity:1; pointer-events:auto; }
+.gallery-carousel .carousel-stage{ position:relative; max-width:92vw; max-height:88vh; display:flex; align-items:center; justify-content:center; }
+.gallery-carousel img{ max-width:92vw; max-height:80vh; border-radius:10px; box-shadow:0 20px 60px rgba(0,0,0,.5); }
+.gallery-carousel .carousel-close{
+  position:absolute; top:20px; right:24px; z-index:6; width:40px; height:40px; border-radius:50%;
   background: rgba(11,6,7,0.6); border:1px solid rgba(243,237,226,0.25); color:var(--mist);
   font-size:1.3rem; line-height:1; display:flex; align-items:center; justify-content:center; cursor:pointer;
 }
-.gallery-lightbox-close:hover{ border-color:var(--amber); color:var(--amber); }
+.gallery-carousel .carousel-close:hover{ border-color:var(--amber); color:var(--amber); }
+.gallery-carousel .carousel-nav{
+  position:absolute; top:50%; transform:translateY(-50%); z-index:6; width:48px; height:48px; border-radius:50%;
+  background: rgba(11,6,7,0.55); border:1px solid rgba(243,237,226,0.25); color:var(--mist);
+  display:flex; align-items:center; justify-content:center; cursor:pointer; transition: border-color .3s var(--ease), background .3s var(--ease);
+}
+.gallery-carousel .carousel-nav:hover{ border-color:var(--amber); background: rgba(11,6,7,0.8); }
+.gallery-carousel .carousel-nav svg{ width:22px; height:22px; stroke:var(--mist); fill:none; stroke-width:2; }
+.gallery-carousel .carousel-prev{ left:-64px; }
+.gallery-carousel .carousel-next{ right:-64px; }
+.gallery-carousel .carousel-counter{
+  position:absolute; bottom:-38px; left:50%; transform:translateX(-50%);
+  font-size:0.76rem; letter-spacing:.05em; color:var(--smoke);
+}
+@media (max-width:900px){
+  .gallery-carousel .carousel-prev{ left:6px; }
+  .gallery-carousel .carousel-next{ right:6px; }
+  .gallery-carousel .carousel-nav{ width:40px; height:40px; background:rgba(11,6,7,0.7); }
+}
 @media (max-width:780px){ .related-suites-grid{ grid-template-columns:1fr; } }
 
 
@@ -1164,9 +1183,18 @@ section{ position:relative; }
   </div>
 </div>
 
-<div class="gallery-lightbox" id="gallery-lightbox">
-  <button class="gallery-lightbox-close" id="gallery-lightbox-close" type="button" aria-label="Fechar">&times;</button>
-  <img id="gallery-lightbox-img" src="" alt="">
+<div class="gallery-carousel" id="gallery-carousel">
+  <div class="carousel-stage">
+    <button class="carousel-nav carousel-prev" id="carousel-prev" type="button" aria-label="Foto anterior">
+      <svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg>
+    </button>
+    <img id="carousel-img" src="" alt="">
+    <button class="carousel-nav carousel-next" id="carousel-next" type="button" aria-label="Próxima foto">
+      <svg viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg>
+    </button>
+    <span class="carousel-counter" id="carousel-counter"></span>
+  </div>
+  <button class="carousel-close" id="carousel-close" type="button" aria-label="Fechar">&times;</button>
 </div>
 
 <script>
@@ -1235,25 +1263,52 @@ document.querySelector('.suite-modal-close').addEventListener('click', closeSuit
 suiteModalOverlay.addEventListener('click', (e) => { if (e.target === suiteModalOverlay) closeSuiteModal(); });
 document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeSuiteModal(); });
 
-// Gallery lightbox
-const galleryLightbox = document.getElementById('gallery-lightbox');
-const galleryLightboxImg = document.getElementById('gallery-lightbox-img');
-document.querySelectorAll('.suite-gallery-grid a, .suite-featured-grid a').forEach(a => {
-  a.addEventListener('click', (e) => {
-    e.preventDefault();
-    galleryLightboxImg.src = a.getAttribute('href');
-    galleryLightboxImg.alt = a.querySelector('img').alt;
-    galleryLightbox.classList.add('open');
-    document.body.style.overflow = 'hidden';
-  });
-});
-function closeGalleryLightbox() {
-  galleryLightbox.classList.remove('open');
+// Gallery carousel
+const galleryCarousel = document.getElementById('gallery-carousel');
+const carouselImg = document.getElementById('carousel-img');
+const carouselCounter = document.getElementById('carousel-counter');
+let carouselItems = [];
+let carouselIndex = 0;
+
+function openCarousel(items, startIndex) {
+  carouselItems = items;
+  carouselIndex = startIndex;
+  updateCarousel();
+  galleryCarousel.classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function updateCarousel() {
+  const item = carouselItems[carouselIndex];
+  carouselImg.src = item.src;
+  carouselImg.alt = item.alt;
+  carouselCounter.textContent = (carouselIndex + 1) + ' / ' + carouselItems.length;
+}
+function closeCarousel() {
+  galleryCarousel.classList.remove('open');
   document.body.style.overflow = '';
 }
-document.getElementById('gallery-lightbox-close').addEventListener('click', closeGalleryLightbox);
-galleryLightbox.addEventListener('click', (e) => { if (e.target === galleryLightbox) closeGalleryLightbox(); });
-document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeGalleryLightbox(); });
+function carouselNext() { carouselIndex = (carouselIndex + 1) % carouselItems.length; updateCarousel(); }
+function carouselPrev() { carouselIndex = (carouselIndex - 1 + carouselItems.length) % carouselItems.length; updateCarousel(); }
+
+const carouselLinks = Array.from(document.querySelectorAll('.suite-featured-grid a, .suite-gallery-grid a'));
+const carouselAllItems = carouselLinks.map(a => ({ src: a.getAttribute('href'), alt: a.querySelector('img').alt }));
+carouselLinks.forEach((a, i) => {
+  a.addEventListener('click', (e) => {
+    e.preventDefault();
+    openCarousel(carouselAllItems, i);
+  });
+});
+
+document.getElementById('carousel-close').addEventListener('click', closeCarousel);
+document.getElementById('carousel-next').addEventListener('click', carouselNext);
+document.getElementById('carousel-prev').addEventListener('click', carouselPrev);
+galleryCarousel.addEventListener('click', (e) => { if (e.target === galleryCarousel) closeCarousel(); });
+document.addEventListener('keydown', (e) => {
+  if (!galleryCarousel.classList.contains('open')) return;
+  if (e.key === 'Escape') closeCarousel();
+  if (e.key === 'ArrowRight') carouselNext();
+  if (e.key === 'ArrowLeft') carouselPrev();
+});
 
 </script>
 </body>
